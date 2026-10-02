@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - CSPrep{% endblock %}
+
+
+
+{% block page %}
+<main>
+<section class="auth-page">
+
+            <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM Logo" class="auth-logo">
+
+            <div class="auth-header">
+
+                <p class="eyebrow">CSPrep · Administration</p>
+
+                <h1>Administrator Login</h1>
+
+                <p>
+                    Manage student and teacher registrations.
+                </p>
+
+            </div>
+
+            <form method="POST" class="auth-form">
+
+                <label for="email">Administrator Email</label>
+
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Administrator email"
+                    required
+                >
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                {% if error %}
+                    <p class="auth-error">{{ error }}</p>
+                {% endif %}
+
+                <button type="submit">
+                    Log In
+                </button>
+
+            </form>
+
+        </section>
+</main>
+{% endblock %}

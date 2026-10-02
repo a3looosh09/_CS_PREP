@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/teacher" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Teacher Portal</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/teacher">Dashboard</a>
+        <a href="/teacher/questions">Question Bank</a>
+        <a href="/teacher/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="teacher-dashboard">
+
+    <div class="teacher-welcome">
+        <p class="eyebrow">TEACHER PORTAL</p>
+        <h1>Welcome, {{ teacher_name }}</h1>
+        <p>
+            Manage your classes, students, and question bank.
+        </p>
+    </div>
+
+
+    <div class="teacher-stats">
+
+        <div class="teacher-stat-card">
+            <div>
+                <p class="eyebrow">QUESTIONS</p>
+                <h2>{{ question_count }}</h2>
+                <span>Total questions</span>
+            </div>
+        </div>
+
+        <div class="teacher-stat-card">
+            <div>
+                <p class="eyebrow">STUDENTS</p>
+                <h2>{{ student_count }}</h2>
+                <span>Accepted students</span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="teacher-main-grid">
+
+        <section class="teacher-card">
+
+            <div class="teacher-card-header">
+                <div>
+                    <p class="eyebrow">CLASSES</p>
+                    <h2>My Classes</h2>
+                </div>
+            </div>
+
+
+            <form
+                method="POST"
+                action="/teacher/classes/create"
+                class="teacher-create-class"
+            >
+
+                <input
+                    type="text"
+                    name="class_name"
+                    placeholder="New class name"
+                    required
+                >
+
+                <button type="submit">
+                    Create Class
+                </button>
+
+            </form>
+
+
+            {% if classes %}
+
+                <div class="teacher-list">
+
+                    {% for class_item in classes %}
+
+                        <a href="{{ url_for('teacher_class', class_id=class_item[0]) }}" class="teacher-list-item teacher-class-link">
+                            <div>
+                                <strong>{{ class_item[1] }}</strong>
+                                <p>Class code: <strong>{{ class_item[2] }}</strong></p>
+                                <p>{{ class_item[3] }} accepted student{% if class_item[3] != 1 %}s{% endif %}</p>
+                            </div>
+                            <span class="class-code">Open Class →</span>
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="teacher-empty">
+                    <strong>No classes yet</strong>
+                    <p>Create a class to start adding students.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <section class="teacher-card">
+
+            <div class="teacher-card-header">
+
+                <div>
+                    <p class="eyebrow">STUDENT REQUESTS</p>
+                    <h2>Pending Requests</h2>
+                </div>
+
+                {% if pending_requests %}
+                    <span class="count-badge">
+                        {{ pending_requests|length }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+
+            {% if pending_requests %}
+
+                <form
+                    method="POST"
+                    action="/teacher/requests/accept-selected"
+                    id="pending-requests-form"
+                >
+
+                    <div class="teacher-request-controls">
+
+                        <button
+                            type="button"
+                            class="select-all-button"
+                            onclick="toggleTeacherRequests(this)"
+                        >
+                            Accept All
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="bulk-approve-button"
+                        >
+                            Accept Selected
+                        </button>
+
+                    </div>
+
+
+                    <div class="teacher-list">
+
+                        {% for request_item in pending_requests %}
+
+                            <div class="teacher-list-item">
+
+                                <label class="approval-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        name="membership_ids"
+                                        value="{{ request_item[0] }}"
+                                        class="membership-checkbox"
+                                    >
+                                    <span class="custom-checkbox"></span>
+                                </label>
+
+
+                                <div class="request-info">
+
+                                    <strong>{{ request_item[2] }}</strong>
+
+                                    <p>{{ request_item[3] }}</p>
+
+                                    <span>{{ request_item[4] }}</span>
+
+                                </div>
+
+
+                                <div class="teacher-actions">
+
+                                    <button
+    type="button"
+    data-url="{{ url_for('accept_student_request', membership_id=request_item[0]) }}"
+    onclick="teacherIndividualAction(this.dataset.url)"
+>
+    Accept
+</button>
+
+                                    <button
+                                        type="button"
+                                        class="reject-button"
+                                        data-url="{{ url_for('reject_student_request', membership_id=request_item[0]) }}"
+                                        onclick="teacherIndividualAction(this.dataset.url)"
+                                    >
+                                        Reject
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </form>
+
+            {% else %}
+
+                <div class="teacher-empty">
+                    <strong>No pending requests</strong>
+                    <p>New student requests will appear here.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+
+    <section class="question-bank-banner">
+
+        <div>
+
+            <p class="eyebrow">CONTENT</p>
+
+            <h2>Question Bank</h2>
+
+            <p>
+                Add, edit, and manage your CSPrep questions.
+            </p>
+
+        </div>
+
+
+        <a href="/teacher/questions" class="teacher-action">
+            Manage Question Bank
+        </a>
+
+    </section>
+
+</section>
+</main>
+
+
+<script>
+function toggleTeacherRequests(button) {
+    const checkboxes = document.querySelectorAll(".membership-checkbox");
+
+    const allSelected = Array.from(checkboxes).every(function(checkbox) {
+        return checkbox.checked;
+    });
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = !allSelected;
+    });
+
+    button.textContent = allSelected ? "Accept All" : "Deselect All";
+}
+
+
+function teacherIndividualAction(url) {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+    document.body.appendChild(form);
+    form.submit();
+}
+function removeTeacherStudent(studentId, studentName) {
+    if (!confirm("Remove " + studentName + " from your classes? Their CSPrep account and progress will remain.")) {
+        return;
+    }
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/teacher/students/" + studentId + "/remove";
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+
+{% endblock %}

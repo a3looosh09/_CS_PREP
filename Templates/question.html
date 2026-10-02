@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Question - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="question-page">
+    <div class="question-info">
+        <span>{{ topic }}</span>
+        <span>{{ difficulty }}</span>
+    </div>
+    <h1>{{ question }}</h1>
+    <form method="POST" action="/submit">
+        <label for="answer">Your Answer</label>
+        <textarea name="answer" id="answer" placeholder="Write your answer here..." required></textarea>
+        <input type="hidden" name="topic" value="{{ topic }}">
+        <input type="hidden" name="question" value="{{ question }}">
+        <input type="hidden" name="question_id" value="{{ question_id }}">
+        <input type="hidden" name="class_id" value="{{ class_id }}">
+        <button type="submit">Submit Answer</button>
+    </form>
+</section>
+</main>
+{% endblock %}

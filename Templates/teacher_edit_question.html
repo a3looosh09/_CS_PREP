@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Question - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/teacher" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Teacher Portal</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/teacher">Dashboard</a>
+        <a href="/teacher/questions">Question Bank</a>
+        <a href="/teacher/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="auth-page">
+    <div class="auth-header">
+        <p class="eyebrow">CSPrep · Teacher Portal</p>
+        <h1>Edit Question</h1>
+        <p>Update the question, class, and marking information.</p>
+    </div>
+
+    <form method="POST" class="auth-form">
+        <label for="class_id">Class</label>
+        <select name="class_id" id="class_id" required>
+            {% for class_item in classes %}
+            <option value="{{ class_item[0] }}" {% if question[1] == class_item[0] %}selected{% endif %}>{{ class_item[1] }} — {{ class_item[2] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="topic">Topic</label>
+        <input type="text" name="topic" id="topic" value="{{ question[2] }}" required>
+
+        <label for="subtopic">Subtopic</label>
+        <input type="text" name="subtopic" id="subtopic" value="{{ question[3] }}" required>
+
+        <label for="difficulty">Difficulty</label>
+        <select name="difficulty" id="difficulty" required>
+            <option value="Easy" {% if question[4] == "Easy" %}selected{% endif %}>Easy</option>
+            <option value="Medium" {% if question[4] == "Medium" %}selected{% endif %}>Medium</option>
+            <option value="Hard" {% if question[4] == "Hard" %}selected{% endif %}>Hard</option>
+        </select>
+
+        <label for="question_text">Question</label>
+        <textarea name="question_text" id="question_text" rows="6" required>{{ question[5] }}</textarea>
+
+        <label for="max_marks">Maximum Marks</label>
+        <input type="number" name="max_marks" id="max_marks" min="1" value="{{ question[6] }}" required>
+
+        <label for="expected_concepts">Mark Scheme / Expected Concepts</label>
+        <textarea name="expected_concepts" id="expected_concepts" rows="6" required>{{ question[7] }}</textarea>
+
+        {% if error %}<p class="auth-error">{{ error }}</p>{% endif %}
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <p class="auth-switch"><a href="/teacher/questions">Back to Question Bank</a></p>
+</section>
+</main>
+{% endblock %}

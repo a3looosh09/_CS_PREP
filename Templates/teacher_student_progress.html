@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}{{ student[1] }} - Student Progress{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/teacher" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Teacher Portal</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/teacher">Dashboard</a>
+        <a href="/teacher/questions">Question Bank</a>
+        <a href="/teacher/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="student-progress-page">
+
+            <div class="teacher-page-header">
+
+                <div>
+
+                    <p class="eyebrow">Student Progress</p>
+
+                    <h1>{{ student[1] }}</h1>
+
+                    <p>{{ student[2] }}</p>
+
+                </div>
+
+                <a href="/teacher" class="secondary-button">
+                    Back
+                </a>
+
+            </div>
+
+
+            <section class="teacher-stats">
+
+                <div class="teacher-stat-card">
+
+                    <p>Overall Score</p>
+
+                    <h2>{{ overall_percentage }}%</h2>
+
+                    <span>Across completed questions</span>
+
+                </div>
+
+
+                <div class="teacher-stat-card">
+
+                    <p>Questions Completed</p>
+
+                    <h2>{{ total_attempts }}</h2>
+
+                    <span>Completed attempts</span>
+
+                </div>
+
+            </section>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <h2>Topic Performance</h2>
+
+                    <p>
+                        Performance by CS topic.
+                    </p>
+
+                </div>
+
+
+                {% if topic_performance %}
+
+                    <div class="teacher-topic-grid">
+
+                        {% for topic in topic_performance %}
+
+                            <div class="topic-performance-card">
+
+                                <div class="topic-card-top">
+
+                                    <div>
+                                        <h3>{{ topic.topic }}</h3>
+                                    </div>
+
+                                    <strong>
+                                        {{ topic.percentage }}%
+                                    </strong>
+
+                                </div>
+
+                                <div class="progress-bar">
+
+                                    <div class="progress-fill" style="width: {{ topic.percentage }}%;"></div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <h3>No completed questions</h3>
+
+                        <p>
+                            This student has not completed any graded attempts yet.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <section class="recommendation-card">
+
+                <div>
+
+                    <p class="recommendation-label">
+                        WEAKEST TOPIC
+                    </p>
+
+                    {% if weakest_topic %}
+
+                        <h3>{{ weakest_topic }}</h3>
+
+                        <p>
+                            Current performance: {{ weakest_percentage }}%.
+                            This is the topic that may need the most attention.
+                        </p>
+
+                    {% else %}
+
+                        <h3>No data yet</h3>
+
+                        <p>
+                            More completed questions are needed to identify a weak topic.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <h2>Recent Attempts</h2>
+
+                    <p>
+                        The student's latest completed questions.
+                    </p>
+
+                </div>
+
+
+                {% if recent_attempts %}
+
+                    <div class="attempt-history">
+
+                        {% for attempt in recent_attempts %}
+
+                            <div class="attempt-card">
+
+                                <div class="attempt-info">
+
+                                    <div class="attempt-topic">
+
+                                        <span class="topic-dot"></span>
+
+                                        <h3>{{ attempt[3] }}</h3>
+
+                                    </div>
+
+                                    <p>
+                                        {{ attempt[4] }}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="attempt-score">
+
+                                    <strong>
+                                        {{ attempt[1] }}/{{ attempt[2] }}
+                                    </strong>
+
+                                    <span>
+                                        {{ attempt[5] }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <h3>No attempts yet</h3>
+
+                        <p>
+                            This student has not completed any questions.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </section>
+</main>
+{% endblock %}

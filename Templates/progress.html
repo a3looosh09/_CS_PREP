@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}Progress - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="progress-page">
+
+            <div class="progress-header">
+
+                <div>
+                    <p class="eyebrow">STUDENT DASHBOARD</p>
+
+                    <h1>Your Progress</h1>
+
+                    <p class="progress-subtitle">
+                        Track your performance and identify the topics you need to improve.
+                    </p>
+                </div>
+
+                <a href="/practice" class="practice-button">
+                    Practice Now
+                </a>
+
+            </div>
+
+
+            <div class="progress-stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <p>Questions Completed</p>
+                        <h2>{{ total_attempts }}</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        %
+                    </div>
+
+                    <div>
+                        <p>Average Score</p>
+                        <h2>{{ average_percentage }}%</h2>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Topic Performance</h2>
+
+                        <p>
+                            See how you're performing across each CS topic.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                {% if topic_performance %}
+
+                    <div class="topic-performance">
+
+                        {% for topic in topic_performance %}
+
+                            <div class="topic-performance-card">
+
+                                <div class="topic-card-top">
+
+                                    <div>
+                                        <h3>{{ topic.topic }}</h3>
+
+                                        <p>
+                                            Your current performance
+                                        </p>
+                                    </div>
+
+                                    <strong>
+                                        {{ topic.percentage }}%
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-bar">
+
+                                    <div class="progress-fill" style="width: {{ topic.percentage }}%;"></div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <h3>Not enough data</h3>
+
+                        <p>
+                            Complete some practice questions to see your topic performance.
+                        </p>
+
+                        <a href="/practice">
+                            Start practicing
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Recommended Practice</h2>
+
+                        <p>
+                            Based on your current performance.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                {% if weakest_topic %}
+
+                    <div class="recommendation-card">
+
+                        <div>
+
+                            <p class="recommendation-label">
+                                FOCUS ON
+                            </p>
+
+                            <h3>
+                                {{ weakest_topic }}
+                            </h3>
+
+                            <p>
+                                Your current performance in this topic is
+                                {{ weakest_percentage|round|int }}%.
+                                Practice this topic to improve your overall performance.
+                            </p>
+
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <h3>Complete some questions first</h3>
+
+                        <p>
+                            We'll recommend what you should practice once we have enough data.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <section class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Recent Attempts</h2>
+
+                        <p>
+                            Your latest practice questions and scores.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                {% if attempts %}
+
+                    <div class="attempt-history">
+
+                        {% for attempt in attempts %}
+
+                            <div class="attempt-card">
+
+                                <div class="attempt-info">
+
+                                    <div class="attempt-topic">
+
+                                        <span class="topic-dot"></span>
+
+                                        <h3>
+                                            {{ attempt[2] }}
+                                        </h3>
+
+                                    </div>
+
+                                    <p>
+                                        Difficulty: {{ attempt[3] }}
+                                    </p>
+
+                                </div>
+
+
+                                <div class="attempt-score">
+
+                                    <strong>
+                                        {{ attempt[0] }}/{{ attempt[1] }}
+                                    </strong>
+
+                                    {% if attempt[1] > 0 %}
+
+                                        <span>
+                                            {{ ((attempt[0] / attempt[1]) * 100)|round|int }}%
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <h3>No attempts yet</h3>
+
+                        <p>
+                            Complete your first question to start tracking your progress.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        </section>
+</main>
+{% endblock %}

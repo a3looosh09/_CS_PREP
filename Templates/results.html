@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Results - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="results">
+    <h1>Results</h1>
+    <p><strong>Topic:</strong> {{ topic }}</p>
+    <p><strong>Question:</strong> {{ question }}</p>
+    <div class="score"><h2>{{ score }}/{{ max_marks }}</h2></div>
+    <div class="feedback">
+        <h2>Feedback</h2>
+        <p>{{ feedback }}</p>
+    </div>
+    <div class="markscheme-card">
+        <h2>Mark Scheme</h2>
+        <p>{{ mark_scheme }}</p>
+    </div>
+    <a href="{{ url_for('student_class', class_id=class_id) }}" class="secondary-button">Back to Class</a>
+    <a href="{{ url_for('practice', class_id=class_id) }}" class="practice-button">Practice Again</a>
+</section>
+</main>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}My Classes - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="progress-page">
+    <div class="auth-header">
+        <p class="eyebrow">CSPrep · Student</p>
+        <h1>My Classes</h1>
+        <p>Join classes and access class-specific Computer Science questions.</p>
+    </div>
+
+    <section class="progress-card">
+        <h2>Join a Class</h2>
+        <form method="POST" action="/classes/join" class="auth-form">
+            <label for="class_code">Class Code</label>
+            <input type="text" name="class_code" id="class_code" placeholder="Enter class code" maxlength="6" required>
+            {% if error %}
+                <p class="auth-error">{{ error }}</p>
+            {% endif %}
+            <button type="submit">Request to Join</button>
+        </form>
+    </section>
+
+    <section class="progress-card">
+        <div class="section-heading class-page-heading">
+            <div>
+                <h2>Your Classes</h2>
+                <p>Click an accepted class to view its questions and progress.</p>
+            </div>
+        </div>
+
+        {% if classes %}
+        <div class="student-list">
+            {% for class_item in classes %}
+            <a href="{% if class_item[4] == 'accepted' %}{{ url_for('student_class', class_id=class_item[0]) }}{% else %}#{% endif %}" class="student-row class-row-link {% if class_item[4] != 'accepted' %}class-row-disabled{% endif %}">
+                <div>
+                    <strong>{{ class_item[1] }}</strong>
+                    <p>Teacher: {{ class_item[3] }}</p>
+                    <p>Class code: {{ class_item[2] }}</p>
+                </div>
+                <div class="class-row-right">
+                    {% if class_item[4] == 'accepted' %}
+                    <div class="class-list-progress">
+                        <strong>{{ class_item[6] }}%</strong>
+                        <span>{{ class_item[5] }} completed</span>
+                    </div>
+                    {% endif %}
+                    <span class="account-status {{ class_item[4] }}">{{ class_item[4] | capitalize }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>You haven't joined any classes yet.</p>
+        {% endif %}
+    </section>
+
+    <p class="auth-switch"><a href="/">Back to Home</a></p>
+</section>
+</main>
+{% endblock %}

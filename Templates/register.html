@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Student Registration - CSPrep{% endblock %}
+
+
+
+{% block page %}
+<main>
+<section class="auth-page registration-page">
+
+            <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM Logo" class="auth-logo">
+
+            <div class="auth-header">
+
+                <p class="eyebrow">CSPrep · Student</p>
+
+                <h1>Create Your Account</h1>
+
+                <p>
+                    Register with your EISM student details.
+                    Your account will need administrator approval before you can log in.
+                </p>
+
+            </div>
+
+            <form method="POST" class="auth-form">
+
+                <label for="name">Full Name</label>
+
+                <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Your full name"
+                    required
+                >
+
+                <label for="email">Student Email</label>
+
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="m1234@students.eischools.ae"
+                    required
+                >
+
+                <label for="year_group">Year Group</label>
+
+                <select name="year_group" id="year_group" required>
+                    <option value="">Select your year</option>
+                    <option value="Year 7">Year 7</option>
+                    <option value="Year 8">Year 8</option>
+                    <option value="Year 9">Year 9</option>
+                    <option value="Year 10">Year 10</option>
+                    <option value="Year 11">Year 11</option>
+                    <option value="Year 12">Year 12</option>
+                    <option value="Year 13">Year 13</option>
+                </select>
+
+                <label for="form_class">Form Class</label>
+
+                <select name="form_class" id="form_class" required>
+                    <option value="">Select your form</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                </select>
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="At least 8 characters"
+                    minlength="8"
+                    required
+                >
+
+                <label for="confirm_password">Confirm Password</label>
+
+                <input
+                    type="password"
+                    name="confirm_password"
+                    id="confirm_password"
+                    placeholder="Re-enter your password"
+                    minlength="8"
+                    required
+                >
+
+                {% if error %}
+                    <p class="auth-error">{{ error }}</p>
+                {% endif %}
+
+                <button type="submit">
+                    Create Student Account
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="/login">Log In</a>
+            </p>
+
+            <p class="auth-switch">
+                Are you a teacher?
+                <a href="/teacher/register">Teacher Registration</a>
+            </p>
+
+        </section>
+</main>
+{% endblock %}

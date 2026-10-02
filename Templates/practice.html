@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Practice - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="practice">
+    <p class="eyebrow">CSPrep · Student</p>
+    <h1>Practice</h1>
+    <p class="practice-description">Choose a class first. Questions are only taken from that class.</p>
+
+    {% if error %}
+        <p class="auth-error">{{ error }}</p>
+    {% endif %}
+
+    {% if classes %}
+    <form method="POST" class="practice-form">
+        <label for="class_id">Class</label>
+        <select name="class_id" id="class_id" required>
+            <option value="" disabled {% if not selected_class_id %}selected{% endif %}>Choose a class</option>
+            {% for class_item in classes %}
+                {% if class_item[4] == 'accepted' %}
+                <option value="{{ class_item[0] }}" {% if selected_class_id == class_item[0] %}selected{% endif %}>
+                    {{ class_item[1] }} — {{ class_item[3] }}
+                </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+
+        <label for="topic">Topic</label>
+        <select name="topic" id="topic" required {% if not topics %}disabled{% endif %}>
+            {% if topics %}
+                {% for topic in topics %}
+                <option value="{{ topic }}">{{ topic }}</option>
+                {% endfor %}
+            {% else %}
+                <option value="">No topics available</option>
+            {% endif %}
+        </select>
+
+        <label for="difficulty">Difficulty</label>
+        <select name="difficulty" id="difficulty" required>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+        </select>
+
+        <button type="submit">Start Question</button>
+    </form>
+    {% else %}
+    <div class="recommended">
+        <h2>Join a class first</h2>
+        <p>You need to be accepted into a class before you can practice class-specific questions.</p>
+        <a href="/classes" class="secondary-button">Go to My Classes</a>
+    </div>
+    {% endif %}
+</section>
+</main>
+{% endblock %}

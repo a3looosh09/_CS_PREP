@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Cannot Delete - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/teacher" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Teacher Portal</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/teacher">Dashboard</a>
+        <a href="/teacher/questions">Question Bank</a>
+        <a href="/teacher/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="auth-page">
+
+            <div class="auth-header">
+
+                <p class="eyebrow">Question Management</p>
+
+                <h1>Question cannot be deleted</h1>
+
+                <p>
+                    Students have already attempted this question, so deleting
+                    it would remove it from their historical records.
+                </p>
+
+            </div>
+
+            <a href="/teacher/questions" class="practice-button">
+                Return to Question Bank
+            </a>
+
+        </section>
+</main>
+{% endblock %}

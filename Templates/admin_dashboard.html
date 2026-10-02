@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <div class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM Logo">
+        <span>CSPrep</span>
+    </div>
+
+    <div class="header-right">
+        <span>Administrator</span>
+        <a href="{{ url_for('admin_logout') }}" class="logout-button">Logout</a>
+    </div>
+</header>
+{% endblock %}
+
+{% block page %}
+<main class="admin-dashboard">
+    <section class="admin-welcome">
+        <h1>Administrator Dashboard</h1>
+        <p>Welcome, {{ admin_name }}. Manage accounts and pending registrations below.</p>
+    </section>
+
+    <div class="admin-sections-grid">
+        <section class="admin-section">
+            <div class="admin-section-header">
+                <div>
+                    <h2>Pending Students</h2>
+                    <p>Review student registrations awaiting approval.</p>
+                </div>
+                {% if pending_students %}
+                <button type="button" class="select-all-button" onclick="toggleSelectAll('student-checkbox', this)">Approve All</button>
+                {% endif %}
+            </div>
+
+            {% if pending_students %}
+            <form method="POST" action="{{ url_for('approve_selected_students') }}">
+                <div class="approval-list">
+                    {% for student in pending_students %}
+                    <div class="approval-item">
+                        <label class="approval-checkbox">
+                            <input type="checkbox" class="student-checkbox" name="student_ids" value="{{ student[0] }}">
+                            <span class="custom-checkbox"></span>
+                        </label>
+                        <div class="approval-info">
+                            <strong>{{ student[1] }}</strong>
+                            <p>{{ student[2] }}</p>
+                            <p>{{ student[3] }} · Form {{ student[4] }}</p>
+                        </div>
+                        <div class="approval-actions">
+                            <button type="button" data-url="{{ url_for('approve_student', student_id=student[0]) }}" onclick="individualAction(this.dataset.url)">Approve</button>
+                            <button type="button" class="reject-button" data-url="{{ url_for('reject_student', student_id=student[0]) }}" onclick="individualAction(this.dataset.url)">Reject</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="bulk-action-bar">
+                    <button type="submit" class="bulk-approve-button">Approve Selected</button>
+                </div>
+            </form>
+            {% else %}
+            <p class="admin-empty">There are no pending student registrations.</p>
+            {% endif %}
+        </section>
+
+        <section class="admin-section">
+            <div class="admin-section-header">
+                <div>
+                    <h2>Pending Teachers</h2>
+                    <p>Review teacher registrations awaiting approval.</p>
+                </div>
+                {% if pending_teachers %}
+                <button type="button" class="select-all-button" onclick="toggleSelectAll('teacher-checkbox', this)">Approve All</button>
+                {% endif %}
+            </div>
+
+            {% if pending_teachers %}
+            <form method="POST" action="{{ url_for('approve_selected_teachers') }}">
+                <div class="approval-list">
+                    {% for teacher in pending_teachers %}
+                    <div class="approval-item">
+                        <label class="approval-checkbox">
+                            <input type="checkbox" class="teacher-checkbox" name="teacher_ids" value="{{ teacher[0] }}">
+                            <span class="custom-checkbox"></span>
+                        </label>
+                        <div class="approval-info">
+                            <strong>{{ teacher[1] }}</strong>
+                            <p>{{ teacher[2] }}</p>
+                        </div>
+                        <div class="approval-actions">
+                            <button type="button" data-url="{{ url_for('approve_teacher', teacher_id=teacher[0]) }}" onclick="individualAction(this.dataset.url)">Approve</button>
+                            <button type="button" class="reject-button" data-url="{{ url_for('reject_teacher', teacher_id=teacher[0]) }}" onclick="individualAction(this.dataset.url)">Reject</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="bulk-action-bar">
+                    <button type="submit" class="bulk-approve-button">Approve Selected</button>
+                </div>
+            </form>
+            {% else %}
+            <p class="admin-empty">There are no pending teacher registrations.</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <div class="admin-sections-grid admin-account-grid">
+        <section class="admin-section">
+            <div class="admin-section-header">
+                <div>
+                    <h2>Student Accounts</h2>
+                    <p>Remove an account permanently when necessary.</p>
+                </div>
+            </div>
+            {% if all_students %}
+            <div class="approval-list">
+                {% for student in all_students %}
+                <div class="approval-item account-item">
+                    <div class="approval-info">
+                        <strong>{{ student[1] }}</strong>
+                        <p>{{ student[2] }}</p>
+                        <p>{{ student[3] }} · Form {{ student[4] }}</p>
+                        <span class="account-status {{ student[5] }}">{{ student[5]|capitalize }}</span>
+                    </div>
+                    <button type="button" class="delete-button" onclick="deleteAccount('student', {{ student[0] }}, '{{ student[1]|replace("'", "\\'") }}')">Remove</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="admin-empty">No student accounts.</p>
+            {% endif %}
+        </section>
+
+        <section class="admin-section">
+            <div class="admin-section-header">
+                <div>
+                    <h2>Teacher Accounts</h2>
+                    <p>Remove an account and its classes when necessary.</p>
+                </div>
+            </div>
+            {% if all_teachers %}
+            <div class="approval-list">
+                {% for teacher in all_teachers %}
+                <div class="approval-item account-item">
+                    <div class="approval-info">
+                        <strong>{{ teacher[1] }}</strong>
+                        <p>{{ teacher[2] }}</p>
+                        <span class="account-status {{ teacher[3] }}">{{ teacher[3]|capitalize }}</span>
+                    </div>
+                    <button type="button" class="delete-button" onclick="deleteAccount('teacher', {{ teacher[0] }}, '{{ teacher[1]|replace("'", "\\'") }}')">Remove</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="admin-empty">No teacher accounts.</p>
+            {% endif %}
+        </section>
+    </div>
+</main>
+
+<script>
+function toggleSelectAll(className, button) {
+    const checkboxes = document.querySelectorAll("." + className);
+    const allSelected = checkboxes.length > 0 && Array.from(checkboxes).every(function(checkbox) {
+        return checkbox.checked;
+    });
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = !allSelected;
+    });
+    button.textContent = allSelected ? "Approve All" : "Deselect All";
+}
+
+function individualAction(url) {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = url;
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function deleteAccount(type, id, name) {
+    const message = type === "student"
+        ? "Remove " + name + " permanently? This will delete their account, class memberships, and practice history."
+        : "Remove " + name + " permanently? This will delete their account, classes, and class memberships.";
+
+    if (!confirm(message)) {
+        return;
+    }
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = type === "student"
+        ? "/admin/students/" + id + "/delete"
+        : "/admin/teachers/" + id + "/delete";
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+{% endblock %}

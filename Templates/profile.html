@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="profile-page">
+    <div class="profile-header">
+        <p class="eyebrow">CSPrep · Student</p>
+        <h1>Your Profile</h1>
+        <p>View your account and class information.</p>
+    </div>
+
+    <section class="profile-card">
+        <div class="profile-card-header">
+            <h2>Account Information</h2>
+        </div>
+        <div class="profile-details">
+            <div><span>Name</span><strong>{{ student[1] }}</strong></div>
+            <div><span>School Email</span><strong>{{ student[2] }}</strong></div>
+            <div><span>Year Group</span><strong>{{ student[3] }}</strong></div>
+            <div><span>Form Class</span><strong>{{ student[4] }}</strong></div>
+        </div>
+    </section>
+
+    <section class="profile-card">
+        <div class="profile-card-header">
+            <h2>Your Classes</h2>
+        </div>
+        {% if classes %}
+        <div class="profile-classes">
+            {% for class_item in classes %}
+            <div class="profile-class-row">
+                <div>
+                    <strong>{{ class_item[1] }}</strong>
+                    <p>Teacher: {{ class_item[3] }}</p>
+                    <p>Class code: {{ class_item[2] }}</p>
+                </div>
+                <span class="account-status {{ class_item[4] }}">{{ class_item[4]|capitalize }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>You haven't joined any classes yet.</p>
+        {% endif %}
+    </section>
+
+    <a href="/" class="secondary-button">Back to Home</a>
+</section>
+</main>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ class_data[1] }} - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="class-page">
+    <div class="class-page-header">
+        <div>
+            <p class="eyebrow">CSPrep · Class</p>
+            <h1>{{ class_data[1] }}</h1>
+            <p>Teacher: {{ class_data[3] }} · Class code: {{ class_data[2] }}</p>
+        </div>
+        <a href="{{ url_for('practice', class_id=class_data[0]) }}" class="practice-button">Practice This Class</a>
+    </div>
+
+    <section class="class-progress-card">
+        <div>
+            <p class="eyebrow">YOUR PROGRESS</p>
+            <h2>{{ percentage }}%</h2>
+            <p>{{ attempts }} completed question{% if attempts != 1 %}s{% endif %}</p>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ percentage }}%;"></div>
+        </div>
+    </section>
+
+    <section class="teacher-card">
+        <div class="teacher-card-header">
+            <div>
+                <p class="eyebrow">CLASS CONTENT</p>
+                <h2>Questions</h2>
+                <p class="class-section-description">These questions were uploaded specifically for this class.</p>
+            </div>
+        </div>
+
+        {% if questions %}
+        <div class="question-bank-list">
+            {% for question in questions %}
+            <div class="question-bank-card">
+                <div class="question-bank-content">
+                    <div class="question-meta">
+                        <span>{{ question[2] }}</span>
+                        <span>{{ question[3] }}</span>
+                        <span>{{ question[4] }}</span>
+                        <span>{{ question[6] }} marks</span>
+                    </div>
+                    <h3>{{ question[5] }}</h3>
+                </div>
+                <a href="{{ url_for('student_question', question_id=question[0]) }}" class="secondary-button">Practice</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No questions yet</h3>
+            <p>Your teacher has not uploaded any questions for this class yet.</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <a href="/classes" class="secondary-button">Back to My Classes</a>
+</section>
+</main>
+{% endblock %}

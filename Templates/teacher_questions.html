@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Question Bank - CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/teacher" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Teacher Portal</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/teacher">Dashboard</a>
+        <a href="/teacher/questions">Question Bank</a>
+        <a href="/teacher/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="teacher-question-page">
+    <div class="teacher-page-header">
+        <div>
+            <p class="eyebrow">Teacher Portal</p>
+            <h1>Question Bank</h1>
+            <p>View and manage questions uploaded to your classes.</p>
+        </div>
+        <a href="/teacher/questions/add" class="practice-button">Add Question</a>
+    </div>
+
+    <section class="question-bank-list">
+        {% if questions %}
+            {% for question in questions %}
+            <div class="question-bank-card">
+                <div class="question-bank-content">
+                    <div class="question-meta">
+                        <span>{{ question[8] }}</span>
+                        <span>{{ question[2] }}</span>
+                        <span>{{ question[3] }}</span>
+                        <span>{{ question[4] }}</span>
+                        <span>{{ question[6] }} marks</span>
+                    </div>
+                    <h3>{{ question[5] }}</h3>
+                    <p>Mark scheme: {{ question[7] }}</p>
+                </div>
+                <div class="question-actions">
+                    <a href="/teacher/questions/edit/{{ question[0] }}" class="secondary-button">Edit</a>
+                    <form method="POST" action="/teacher/questions/delete/{{ question[0] }}">
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No questions yet</h3>
+                <p>Add a question and assign it to one of your classes.</p>
+                <a href="/teacher/questions/add">Add Question</a>
+            </div>
+        {% endif %}
+    </section>
+</section>
+</main>
+{% endblock %}

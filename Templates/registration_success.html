@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Submitted - CSPrep{% endblock %}
+
+
+
+{% block page %}
+<main>
+<section class="auth-page">
+
+            <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM Logo" class="auth-logo">
+
+            <div class="auth-header">
+
+                <p class="eyebrow">CSPrep</p>
+
+                <h1>Registration Submitted</h1>
+
+                {% if account_type == "student" %}
+
+                    <p>
+                        Your student account has been created successfully.
+                        An administrator must approve your account before you can log in.
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        Your teacher account has been created successfully.
+                        An administrator must approve your account before you can log in.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            {% if account_type == "student" %}
+
+                <a href="/login" class="auth-button">
+                    Go to Student Login
+                </a>
+
+            {% else %}
+
+                <a href="/teacher/login" class="auth-button">
+                    Go to Teacher Login
+                </a>
+
+            {% endif %}
+
+        </section>
+</main>
+{% endblock %}

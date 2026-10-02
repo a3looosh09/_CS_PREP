@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Login - CSPrep{% endblock %}
+
+
+
+{% block page %}
+<main>
+<section class="auth-page">
+
+            <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM Logo" class="auth-logo">
+
+            <div class="auth-header">
+                <p class="eyebrow">CSPrep</p>
+
+                <h1>Welcome back</h1>
+
+                <p>
+                    Log in with your school account to continue.
+                </p>
+            </div>
+
+            <form method="POST" class="auth-form">
+
+                <label for="email">School Email</label>
+
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="m1234@students.eischools.ae"
+                    required
+                >
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                {% if error %}
+                    <p class="auth-error">{{ error }}</p>
+                {% endif %}
+
+                <button type="submit">
+                    Log In
+                </button>
+
+            </form>
+
+            <p class="auth-switch">
+                Don't have an account?
+                <a href="/register">Create one</a>
+            </p>
+
+            <p class="auth-switch">
+                Are you a teacher?
+                <a href="/teacher/login">Teacher Login</a>
+            </p>
+
+        </section>
+</main>
+{% endblock %}

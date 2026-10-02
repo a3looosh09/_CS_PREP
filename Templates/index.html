@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}CSPrep{% endblock %}
+
+{% block header %}
+<header class="app-header">
+    <a href="/" class="brand">
+        <img src="{{ url_for('static', filename='eism-logo.png') }}" alt="EISM">
+        <span class="brand-text"><strong>CSPrep</strong><span>Computer Science Practice</span></span>
+    </a>
+    <nav class="student-nav">
+        <a href="/">Home</a>
+        <a href="/practice">Practice</a>
+        <a href="/progress">Progress</a>
+        <a href="/classes">My Classes</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="logout-button">Log Out</a>
+    </nav>
+</header>
+{% endblock %}
+
+{% block page %}
+<main>
+<section class="hero">
+    <p class="eyebrow">CSPrep · Student</p>
+    <h1>Your AI Study Assistant</h1>
+    <p>
+        Practice Computer Science, identify your weaknesses,
+        and improve with AI-powered feedback.
+    </p>
+    <a href="/practice" class="practice-button">Start Practicing</a>
+</section>
+
+<section class="topics">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Your Progress</p>
+            <h2>Your Classes</h2>
+        </div>
+        <a href="/classes" class="secondary-button">Manage Classes</a>
+    </div>
+
+    {% if classes %}
+    <div class="topic-container class-scroll-container">
+        {% for class_item in classes %}
+        <a href="{{ url_for('student_class', class_id=class_item[0]) }}" class="topic-card class-card">
+            <div>
+                <h3>{{ class_item[1] }}</h3>
+                <p>Teacher: {{ class_item[3] }}</p>
+                <p>Class code: {{ class_item[2] }}</p>
+            </div>
+            <div class="class-progress">
+                <div class="class-progress-top">
+                    <span>Progress</span>
+                    <strong>{{ class_item[6] }}%</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ class_item[6] }}%;"></div>
+                </div>
+                <p>{{ class_item[5] }} completed question{% if class_item[5] != 1 %}s{% endif %}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="recommended">
+        <h2>No classes yet</h2>
+        <p>Join a class to see your class-specific questions and progress here.</p>
+        <a href="/classes" class="secondary-button">Join a Class</a>
+    </div>
+    {% endif %}
+</section>
+
+<section class="recommended">
+    <p class="eyebrow">AI Recommendations</p>
+    <h2>Recommended</h2>
+    <p>
+        Complete some practice questions to receive
+        personalized recommendations.
+    </p>
+</section>
+</main>
+{% endblock %}
