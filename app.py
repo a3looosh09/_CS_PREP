@@ -1041,4 +1041,8 @@ def accept_selected_student_requests():
     return redirect(url_for("teacher_dashboard"))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+   app.run(host="0.0.0.0", port=5001, debug=False)
+   # app.run(debug=True)
+
+#http://192.168.1.25:5001
+#ipconfig getifaddr en0
